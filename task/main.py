@@ -1,6 +1,5 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.responses import HTMLResponse
-import json
 
 # in terminal:
 # pip install uvicorn[standard]
@@ -36,13 +35,13 @@ html = """
             ws.onmessage = function(event) {
                 var messages = document.getElementById('messages')
                 var message = document.createElement('li')
-                var content = document.createTextNode(event.data)
+                var content = document.createTextNode(`${JSON.parse(event.data)['n']} ${JSON.parse(event.data)['t']}`)
                 message.appendChild(content)
                 messages.appendChild(message)
             };
             function sendMessage(event) {
                 var input = document.getElementById("messageText")
-                ws.send(JSON.stringify({'msg': input.value}))
+                ws.send(input.value)
                 input.value = ''
                 event.preventDefault()
             }
@@ -63,5 +62,5 @@ async def websocket_endpoint(websocket: WebSocket):
     num = 1
     while True:
         data = await websocket.receive_text()
-        await websocket.send_text(f"{str(num)} {json.loads(data)['msg']}")
+        await websocket.send_json({'n': num, 't': data})
         num += 1
