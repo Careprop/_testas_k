@@ -35,8 +35,9 @@ html = """
             ws.onmessage = function(event) {
                 var messages = document.getElementById('messages')
                 var message = document.createElement('li')
-                var text = JSON.parse(JSON.parse(event.data)['t'])
-                var content = document.createTextNode(`${JSON.parse(event.data)['n']} ${text}`)
+                var text = JSON.parse(JSON.parse(event.data).t)
+                var number = JSON.parse(event.data).n
+                var content = document.createTextNode(`${number} ${text}`)
                 message.appendChild(content)
                 messages.appendChild(message)
             };
