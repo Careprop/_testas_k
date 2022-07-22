@@ -35,7 +35,8 @@ html = """
             ws.onmessage = function(event) {
                 var messages = document.getElementById('messages')
                 var message = document.createElement('li')
-                var content = document.createTextNode(`${JSON.parse(event.data)['n']} ${JSON.parse(event.data)['t']}`)
+                var text = JSON.parse(event.data)['t']
+                var content = document.createTextNode(`${JSON.parse(event.data)['n']} ${JSON.parse(text)}`)
                 message.appendChild(content)
                 messages.appendChild(message)
             };
@@ -62,5 +63,5 @@ async def websocket_endpoint(websocket: WebSocket):
     num = 1
     while True:
         data = await websocket.receive_text()
-        await websocket.send_json({'n': num, 't': data.replace('"', "")})
+        await websocket.send_json({'n': num, 't': data})
         num += 1
